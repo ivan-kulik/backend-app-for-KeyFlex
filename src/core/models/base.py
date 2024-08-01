@@ -13,8 +13,8 @@ class Base(DeclarativeBase):
 
     @declared_attr.directive
     def __tablename__(self) -> str:
-        return f"{self.__class__.__name__.lower()}s"
+        return f"{self.__name__.lower()}s"
 
-    id: Mapped[int] = mapped_column(primary_key=True, auto_increment=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
 
