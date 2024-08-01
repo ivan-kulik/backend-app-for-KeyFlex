@@ -30,6 +30,12 @@ class DatabaseConfig(BaseModel):
     }
 
 
+class AccessToken(BaseModel):
+    secret: str
+    lifetime_seconds: int = 3600
+    algorithm: str = "RS256"
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -40,6 +46,7 @@ class Settings(BaseSettings):
     run: RunConfig = RunConfig()
     api: APIPrefix = APIPrefix()
     db: DatabaseConfig
+    access_token: AccessToken
 
 
 settings = Settings()
