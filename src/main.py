@@ -12,9 +12,9 @@ from api import router as api_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    #startapp
+    # startapp
     yield
-    #shutdown
+    # shutdown
     print("dispose engine")
     await db_helper.dispose()
 
@@ -22,19 +22,13 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     lifespan=lifespan,
     default_response_class=ORJSONResponse,
-    name='backend app for KeyFlex project',
+    name="backend app for KeyFlex project",
 )
 
 app.include_router(
     api_router,
-    prefix=settings.api.prefix
 )
 
 
 if __name__ == "__main__":
-    uvicorn.run(
-        "main:app",
-        host=settings.run.host,
-        port=settings.run.port,
-        reload=True
-    )
+    uvicorn.run("main:app", host=settings.run.host, port=settings.run.port, reload=True)
