@@ -12,6 +12,7 @@ class RunConfig(BaseModel):
 
 class APIPrefix(BaseModel):
     prefix: str = "/api"
+    auth: str = "/auth"
 
 
 class DatabaseConfig(BaseModel):
