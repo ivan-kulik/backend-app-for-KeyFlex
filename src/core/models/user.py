@@ -9,9 +9,10 @@ from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime
 
 from .base import Base
+from core.types.user_id import UserIdType
 
 
-class User(Base, SQLAlchemyBaseUserTable[int]):
+class User(Base, SQLAlchemyBaseUserTable[UserIdType]):
     username: Mapped[str] = mapped_column(
         String(length=20), unique=True, index=True, nullable=False
     )
