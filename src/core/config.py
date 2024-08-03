@@ -13,10 +13,11 @@ class RunConfig(BaseModel):
 class APIPrefix(BaseModel):
     prefix: str = "/api"
     auth: str = "/auth"
+    users: str = "/users"
 
     @property
     def bearer_token_url(self) -> str:
-        parts = (self.prefix, self.auth, "/jwt/", "/login")
+        parts = (self.prefix, self.auth, "/jwt", "/login")
         path = "".join(parts)
         return path.removeprefix("/")
 
@@ -40,7 +41,6 @@ class DatabaseConfig(BaseModel):
 class AccessToken(BaseModel):
     secret_key: str
     lifetime_seconds: int = 3600
-    algorithm: str = "RS256"
     reset_password_token_secret: str
     verification_token_secret: str
 
