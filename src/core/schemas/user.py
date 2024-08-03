@@ -13,7 +13,6 @@ class UserRead(schemas.BaseUser[UserIdType]):
 
 class UserCreate(schemas.BaseUserCreate):
     username: Annotated[str, MinLen(3), MaxLen(20)]
-    registration_date: datetime.datetime = datetime.datetime.utcnow()
 
 
 class UserUpdate(schemas.BaseUserUpdate):
