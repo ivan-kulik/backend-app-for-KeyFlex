@@ -6,7 +6,7 @@ from dependencies.authentication.user_manager import get_user_manager
 from dependencies.authentication.backend import auth_backend
 
 
-fastapi_users = FastAPIUsers[User, UserIdType](
+routers_helper = FastAPIUsers[User, UserIdType](
     get_user_manager,
     [auth_backend],
 )
