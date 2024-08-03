@@ -11,6 +11,7 @@ sqlalchemy = {extras = ["asyncio"], version = "^2.0.31"}
 asyncpg = "^0.29.0"
 alembic = "^1.13.2"
 fastapi-users = {extras = ["sqlalchemy"], version = "^13.0.0"}
+orjson = "^3.10.6"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.4.2"
