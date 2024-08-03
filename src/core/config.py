@@ -14,6 +14,12 @@ class APIPrefix(BaseModel):
     prefix: str = "/api"
     auth: str = "/auth"
 
+    @property
+    def bearer_token_url(self) -> str:
+        parts = (self.prefix, self.auth, "/jwt/", "/login")
+        path = "".join(parts)
+        return path.removeprefix("/")
+
 
 class DatabaseConfig(BaseModel):
     url: PostgresDsn
