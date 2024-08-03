@@ -3,8 +3,10 @@ from typing import Annotated, Optional
 from annotated_types import MinLen, MaxLen
 import datetime
 
+from core.types.user_id import UserIdType
 
-class UserRead(schemas.BaseUser[int]):
+
+class UserRead(schemas.BaseUser[UserIdType]):
     username: str
     registration_date: datetime.datetime
 
