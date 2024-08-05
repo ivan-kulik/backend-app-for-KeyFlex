@@ -2,11 +2,22 @@ import logging
 from typing import Optional
 
 from fastapi import Request
-from fastapi_users import BaseUserManager, IntegerIDMixin
+from fastapi_users import (
+    BaseUserManager,
+    IntegerIDMixin,
+    models,
+    schemas,
+)
 
 from core.config import settings
 from core.models import User
 from core.types.user_id import UserIdType
+from core.repositories.users import get_by_username
+from core.exceptions.user import (
+    UserNameAlreadyExists,
+    UserEmailAlreadyExists,
+)
+
 
 log = logging.getLogger(__name__)
 
@@ -14,6 +25,36 @@ log = logging.getLogger(__name__)
 class UserManager(IntegerIDMixin, BaseUserManager[User, UserIdType]):
     reset_password_token_secret = settings.access_token.reset_password_token_secret
     verification_token_secret = settings.access_token.verification_token_secret
+
+    async def create(
+        self,
+        user_create: schemas.UC,
+        safe: bool = False,
+        request: Optional[Request] = None,
+    ) -> models.UP:
+        await self.validate_password(user_create.password, user_create)
+
+        existing_user_by_username = await get_by_username(username=user_create.username)
+        if existing_user_by_username is not None:
+            raise UserNameAlreadyExists()
+
+        existing_user_by_email = await self.user_db.get_by_email(user_create.email)
+        if existing_user_by_email is not None:
+            raise UserEmailAlreadyExists()
+
+        user_dict = (
+            user_create.create_update_dict()
+            if safe
+            else user_create.create_update_dict_superuser()
+        )
+        password = user_dict.pop("password")
+        user_dict["hashed_password"] = self.password_helper.hash(password)
+
+        created_user = await self.user_db.create(user_dict)
+
+        await self.on_after_register(created_user, request)
+
+        return created_user
 
     async def on_after_register(
         self,
