@@ -5,6 +5,7 @@ from fastapi import Request
 from fastapi_users import (
     BaseUserManager,
     IntegerIDMixin,
+    exceptions,
     models,
     schemas,
 )
@@ -17,6 +18,7 @@ from core.exceptions.user import (
     UserNameAlreadyExists,
     UserEmailAlreadyExists,
 )
+from core.authentication.security import OAuth2PasswordRequestForm
 
 
 log = logging.getLogger(__name__)
@@ -34,7 +36,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, UserIdType]):
     ) -> models.UP:
         await self.validate_password(user_create.password, user_create)
 
-        existing_user_by_username = await get_by_username(username=user_create.username)
+        existing_user_by_username = await get_by_username(user_create.username)
         if existing_user_by_username is not None:
             raise UserNameAlreadyExists()
 
@@ -55,6 +57,31 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, UserIdType]):
         await self.on_after_register(created_user, request)
 
         return created_user
+
+    async def authenticate(
+        self,
+        credentials: OAuth2PasswordRequestForm,
+    ) -> Optional[models.UP]:
+        try:
+            if credentials.username:
+                user = await get_by_username(credentials.username)
+            else:
+                user = await self.user_db.get_by_email(credentials.email)
+
+        except exceptions.UserNotExists:
+            self.password_helper.hash(credentials.password)
+            return None
+
+        verified, updated_password_hash = self.password_helper.verify_and_update(
+            credentials.password, user.hashed_password
+        )
+        if not verified:
+            return None
+
+        if updated_password_hash is not None:
+            await self.user_db.update(user, {"hashed_password": updated_password_hash})
+
+        return user
 
     async def on_after_register(
         self,
