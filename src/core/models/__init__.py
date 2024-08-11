@@ -3,6 +3,7 @@ __all__ = (
     "Base",
     "User",
     "OAuthAccount",
+    "Achievements",
 )
 
 from .db_helper import db_helper
@@ -10,3 +11,4 @@ from .base import Base
 from .user import User
 from .profile import Profile
 from .oauth_account import OAuthAccount
+from .achievements import Achievements
