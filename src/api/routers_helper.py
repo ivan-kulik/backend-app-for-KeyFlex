@@ -3,6 +3,7 @@ from typing import Type
 from fastapi import APIRouter
 from fastapi_users import FastAPIUsers, schemas
 from fastapi_users.authentication import AuthenticationBackend
+from httpx_oauth.clients.google import GoogleOAuth2
 
 from core.models import User
 from core.authentication.routers import (
@@ -12,6 +13,13 @@ from core.authentication.routers import (
 from core.types.user_id import UserIdType
 from api.dependencies.authentication.user_manager import get_user_manager
 from api.dependencies.authentication.backend import auth_backend
+from core.config import settings
+
+
+google_oauth_client = GoogleOAuth2(
+    settings.google_oauth2.GOOGLE_OAUTH_CLIENT_ID,
+    settings.google_oauth2.GOOGLE_OAUTH_CLIENT_SECRET,
+)
 
 
 class CustomFastAPIUsers(FastAPIUsers[User, UserIdType]):
