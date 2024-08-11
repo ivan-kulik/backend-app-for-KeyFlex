@@ -45,6 +45,11 @@ class AccessToken(BaseModel):
     verification_token_secret: str
 
 
+class GoogleOAuth2Config(BaseModel):
+    GOOGLE_OAUTH_CLIENT_ID: str
+    GOOGLE_OAUTH_CLIENT_SECRET: str
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -56,6 +61,7 @@ class Settings(BaseSettings):
     api: APIPrefix = APIPrefix()
     db: DatabaseConfig
     access_token: AccessToken
+    google_oauth2: GoogleOAuth2Config
 
 
 settings = Settings()
