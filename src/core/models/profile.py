@@ -1,8 +1,13 @@
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from typing import TYPE_CHECKING
+
 from .base import Base
 from .user import User
+
+if TYPE_CHECKING:
+    from .achievements import Achievements
 
 
 class Profile(Base):
@@ -27,5 +32,8 @@ class Profile(Base):
     )
 
     user: Mapped["User"] = relationship(
+        back_populates="profile",
+    )
+    achievements: Mapped["Achievements"] = relationship(
         back_populates="profile",
     )

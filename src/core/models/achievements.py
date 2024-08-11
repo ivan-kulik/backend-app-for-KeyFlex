@@ -1,5 +1,5 @@
 from sqlalchemy import ForeignKey, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
 from .profile import Profile
@@ -39,4 +39,8 @@ class Achievements(Base):
     one_hundred_characters_per_minute: Mapped[bool] = mapped_column(
         Boolean,
         default=False,
+    )
+
+    profile: Mapped["Profile"] = relationship(
+        back_populates="achievements",
     )
