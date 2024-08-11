@@ -14,6 +14,7 @@ from core.types.user_id import UserIdType
 
 if TYPE_CHECKING:
     from .oauth_account import OAuthAccount
+    from .profile import Profile
 
 
 class User(Base, SQLAlchemyBaseUserTable[UserIdType]):
@@ -26,6 +27,9 @@ class User(Base, SQLAlchemyBaseUserTable[UserIdType]):
 
     oauth_accounts: Mapped[List["OAuthAccount"]] = relationship(
         "OAuthAccount", lazy="joined"
+    )
+    profile: Mapped["Profile"] = relationship(
+        back_populates="user",
     )
 
     @classmethod
