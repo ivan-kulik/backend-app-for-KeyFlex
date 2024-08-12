@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey, ARRAY, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from mixins import RelationshipMixin
+from core.models.mixins import RelationshipMixin
 from .base import Base
 from .user import User
 
@@ -63,7 +63,7 @@ class StandardModeStats(
 ):
     __tablename__ = "standard_mode_stats"
 
-    __relation_name = "standard_mode"
+    __relation_name__ = "standard_mode"
 
 
 class ExtendedModeStats(
@@ -73,7 +73,7 @@ class ExtendedModeStats(
 ):
     __tablename__ = "extended_mode_stats"
 
-    __relation_name = "extended_mode"
+    __relation_name__ = "extended_mode"
 
 
 class TextModeStats(
@@ -83,7 +83,7 @@ class TextModeStats(
 ):
     __tablename__ = "text_mode_stats"
 
-    __relation_name = "text_mode"
+    __relation_name__ = "text_mode"
 
 
 class EnglishModeStats(
@@ -93,7 +93,7 @@ class EnglishModeStats(
 ):
     __tablename__ = "english_mode_stats"
 
-    __relation_name = "english_mode"
+    __relation_name__ = "english_mode"
 
 
 class ExtremeModeStats(
@@ -103,7 +103,7 @@ class ExtremeModeStats(
 ):
     __tablename__ = "extreme_mode_stats"
 
-    __relation_name = "extreme_mode"
+    __relation_name__ = "extreme_mode"
 
 
 class UserModeStats(
@@ -113,4 +113,4 @@ class UserModeStats(
 ):
     __tablename__ = "user_mode_stats"
 
-    __relation_name = "user_mode"
+    __relation_name__ = "user_mode"

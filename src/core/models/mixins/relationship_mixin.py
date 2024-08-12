@@ -6,10 +6,10 @@ RelationClassName = TypeVar("RelationClassName")
 
 
 class RelationshipMixin(Generic[RelationClassName]):
-    __relation_name: ClassVar[str]
+    __relation_name__: ClassVar[str]
 
     @declared_attr
     def statistics_data(cls) -> Mapped[RelationClassName]:
         return relationship(
-            back_populates=cls.__relation_name,
+            back_populates=cls.__relation_name__,
         )
