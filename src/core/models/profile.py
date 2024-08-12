@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 class Profile(Base):
     user_id: Mapped[int] = mapped_column(
         ForeignKey(User.id),
+        unique=True,
     )
 
     touch_typing: Mapped[str] = mapped_column(
