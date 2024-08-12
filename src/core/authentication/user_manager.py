@@ -14,7 +14,7 @@ from core.config import settings
 from core.models import User
 from core.types.user_id import UserIdType
 from core.repositories.users import get_by_username
-from core.exceptions.user import (
+from core.authentication.auth_exceptions import (
     UserNameAlreadyExists,
     UserEmailAlreadyExists,
 )

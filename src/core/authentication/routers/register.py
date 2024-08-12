@@ -5,8 +5,8 @@ from fastapi_users import exceptions, models, schemas
 from fastapi_users.manager import BaseUserManager, UserManagerDependency
 from fastapi_users.router.common import ErrorModel
 
-from core.errors.user import ErrorCode
-from core.exceptions.user import (
+from core.authentication.auth_errors import ErrorCode
+from core.authentication.auth_exceptions import (
     UserNameAlreadyExists,
     UserEmailAlreadyExists,
 )

@@ -8,7 +8,7 @@ from fastapi_users.manager import BaseUserManager, UserManagerDependency
 from fastapi_users.openapi import OpenAPIResponseType
 from fastapi_users.router.common import ErrorModel
 
-from core.errors.user import ErrorCode
+from core.authentication.auth_errors import ErrorCode
 from core.authentication.security import OAuth2PasswordRequestForm
 
 
