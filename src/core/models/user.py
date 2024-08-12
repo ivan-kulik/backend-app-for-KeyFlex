@@ -15,6 +15,7 @@ from core.types.user_id import UserIdType
 if TYPE_CHECKING:
     from .oauth_account import OAuthAccount
     from .profile import Profile
+    from .statistics_data import StatisticsData
 
 
 class User(Base, SQLAlchemyBaseUserTable[UserIdType]):
@@ -29,6 +30,9 @@ class User(Base, SQLAlchemyBaseUserTable[UserIdType]):
         "OAuthAccount", lazy="joined"
     )
     profile: Mapped["Profile"] = relationship(
+        back_populates="user",
+    )
+    statistics_data: Mapped["StatisticsData"] = relationship(
         back_populates="user",
     )
 
