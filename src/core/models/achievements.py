@@ -10,6 +10,7 @@ class Achievements(Base):
 
     profile_id: Mapped[int] = mapped_column(
         ForeignKey(Profile.id),
+        unique=True,
     )
 
     forty_characters_per_minute: Mapped[bool] = mapped_column(
