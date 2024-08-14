@@ -59,7 +59,7 @@ class BaseStats:
 class StandardModeStats(
     Base,
     BaseStats,
-    RelationshipMixin[StatisticsData],
+    RelationshipMixin,
 ):
     __tablename__ = "standard_mode_stats"
 
@@ -69,7 +69,7 @@ class StandardModeStats(
 class ExtendedModeStats(
     Base,
     BaseStats,
-    RelationshipMixin[StatisticsData],
+    RelationshipMixin,
 ):
     __tablename__ = "extended_mode_stats"
 
@@ -79,9 +79,9 @@ class ExtendedModeStats(
 class TextModeStats(
     Base,
     BaseStats,
-    RelationshipMixin[StatisticsData],
+    RelationshipMixin,
 ):
-    __tablename__ = "text_mode_stats"
+    __tablename__ = "text_mde_stats"
 
     __relation_name__ = "text_mode"
 
@@ -89,7 +89,7 @@ class TextModeStats(
 class EnglishModeStats(
     Base,
     BaseStats,
-    RelationshipMixin[StatisticsData],
+    RelationshipMixin,
 ):
     __tablename__ = "english_mode_stats"
 
@@ -99,7 +99,7 @@ class EnglishModeStats(
 class ExtremeModeStats(
     Base,
     BaseStats,
-    RelationshipMixin[StatisticsData],
+    RelationshipMixin,
 ):
     __tablename__ = "extreme_mode_stats"
 
@@ -109,7 +109,7 @@ class ExtremeModeStats(
 class UserModeStats(
     Base,
     BaseStats,
-    RelationshipMixin[StatisticsData],
+    RelationshipMixin,
 ):
     __tablename__ = "user_mode_stats"
 
