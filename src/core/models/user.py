@@ -1,7 +1,4 @@
-from fastapi_users.db import (
-    SQLAlchemyBaseUserTable,
-    SQLAlchemyUserDatabase,
-)
+from fastapi_users.db import SQLAlchemyBaseUserTable
 from sqlalchemy import String, DateTime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -11,6 +8,7 @@ from typing import List, TYPE_CHECKING
 
 from .base import Base
 from core.types.user_id import UserIdType
+from .user_database import CustomSQLAlchemyUserDatabase
 
 if TYPE_CHECKING:
     from .oauth_account import OAuthAccount
@@ -38,7 +36,10 @@ class User(Base, SQLAlchemyBaseUserTable[UserIdType]):
 
     @classmethod
     def get_db(cls, session: AsyncSession):
-        return SQLAlchemyUserDatabase(session, User)
+        return CustomSQLAlchemyUserDatabase(
+            session,
+            User,
+        )
 
     def __repr__(self) -> str:
         return f"<User: {self.username!r}>"

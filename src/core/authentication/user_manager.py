@@ -13,7 +13,7 @@ from fastapi_users import (
 from core.config import settings
 from core.models import User
 from core.types.user_id import UserIdType
-from core.repositories.users import get_by_username
+
 from core.authentication.auth_exceptions import (
     UserNameAlreadyExists,
     UserEmailAlreadyExists,
@@ -36,7 +36,9 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, UserIdType]):
     ) -> models.UP:
         await self.validate_password(user_create.password, user_create)
 
-        existing_user_by_username = await get_by_username(user_create.username)
+        existing_user_by_username = await self.user_db.get_by_username(
+            user_create.username
+        )
         if existing_user_by_username is not None:
             raise UserNameAlreadyExists()
 
@@ -64,7 +66,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, UserIdType]):
     ) -> Optional[models.UP]:
         try:
             if credentials.username:
-                user = await get_by_username(credentials.username)
+                user = await self.user_db.get_by_username(credentials.username)
             else:
                 user = await self.user_db.get_by_email(credentials.email)
 
