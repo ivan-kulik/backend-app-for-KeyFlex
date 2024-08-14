@@ -2,10 +2,8 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.models import (
-    db_helper,
-    User,
-)
+from core.db.db_helper import db_helper
+from core.models import User
 
 
 async def get_users_db(

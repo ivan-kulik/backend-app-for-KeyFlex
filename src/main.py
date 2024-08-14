@@ -6,8 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from core.config import settings
-from core.models import db_helper
-
+from core.db.db_helper import db_helper
 from api import router as api_router
 
 
@@ -47,4 +46,9 @@ app.add_middleware(
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host=settings.run.host, port=settings.run.port, reload=True)
+    uvicorn.run(
+        "main:app",
+        host=settings.run.host,
+        port=settings.run.port,
+        reload=True,
+    )
