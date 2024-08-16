@@ -1,4 +1,6 @@
-from sqlalchemy import ForeignKey, ARRAY, Integer
+from typing import List
+
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models.mixins import RelationshipMixin
@@ -13,26 +15,26 @@ class StatisticsData(Base):
         ForeignKey(User.id),
         unique=True,
     )
-
     user: Mapped["User"] = relationship(
         back_populates="statistics_data",
     )
-    standard_mode: Mapped["StandardModeStats"] = relationship(
+
+    standard_mode: Mapped[List["StandardModeStats"]] = relationship(
         back_populates="statistics_data",
     )
-    extended_mode: Mapped["ExtendedModeStats"] = relationship(
+    extended_mode: Mapped[List["ExtendedModeStats"]] = relationship(
         back_populates="statistics_data",
     )
-    text_mode: Mapped["TextModeStats"] = relationship(
+    text_mode: Mapped[List["TextModeStats"]] = relationship(
         back_populates="statistics_data",
     )
-    english_mode: Mapped["EnglishModeStats"] = relationship(
+    english_mode: Mapped[List["EnglishModeStats"]] = relationship(
         back_populates="statistics_data",
     )
-    extreme_mode: Mapped["ExtremeModeStats"] = relationship(
+    extreme_mode: Mapped[List["ExtremeModeStats"]] = relationship(
         back_populates="statistics_data",
     )
-    user_mode: Mapped["UserModeStats"] = relationship(
+    user_mode: Mapped[List["UserModeStats"]] = relationship(
         back_populates="statistics_data",
     )
 
@@ -40,20 +42,13 @@ class StatisticsData(Base):
 class BaseStats:
     __abstract__ = True
 
-    statistics_id: Mapped[int] = mapped_column(
+    stats_id: Mapped[int] = mapped_column(
         ForeignKey(StatisticsData.id),
         unique=True,
     )
 
-    accuracy_percentage_for_each_attempt: Mapped[ARRAY] = mapped_column(
-        ARRAY(Integer),
-    )
-    characters_per_minute_for_each_attempt: Mapped[ARRAY] = mapped_column(
-        ARRAY(Integer),
-    )
-    average_accuracy: Mapped[int] = mapped_column(
-        Integer,
-    )
+    symbols_per_minute: Mapped[int] = mapped_column()
+    accuracy_percentage: Mapped[int] = mapped_column()
 
 
 class StandardModeStats(
@@ -81,7 +76,7 @@ class TextModeStats(
     BaseStats,
     RelationshipMixin,
 ):
-    __tablename__ = "text_mde_stats"
+    __tablename__ = "text_mode_stats"
 
     __relation_name__ = "text_mode"
 
