@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from .base import Base
 from .user import User
@@ -16,19 +16,19 @@ class Profile(Base):
         unique=True,
     )
 
-    touch_typing: Mapped[str] = mapped_column(
+    touch_typing: Mapped[Optional[str]] = mapped_column(
         String,
     )
-    keyboard_type: Mapped[str] = mapped_column(
+    keyboard_type: Mapped[Optional[str]] = mapped_column(
         String,
     )
-    profession: Mapped[str] = mapped_column(
+    profession: Mapped[Optional[str]] = mapped_column(
         String,
     )
-    location: Mapped[str] = mapped_column(
+    location: Mapped[Optional[str]] = mapped_column(
         String,
     )
-    about_user: Mapped[str] = mapped_column(
+    about_user: Mapped[Optional[str]] = mapped_column(
         String,
     )
 
