@@ -11,8 +11,8 @@ from .user import User
 class StatisticsData(Base):
     __tablename__ = "statistics_data"
 
-    user_id: Mapped[int] = mapped_column(
-        ForeignKey(User.id),
+    user_reference: Mapped[str] = mapped_column(
+        ForeignKey(User.username),
         unique=True,
     )
     user: Mapped["User"] = relationship(
@@ -44,7 +44,6 @@ class BaseStats:
 
     stats_id: Mapped[int] = mapped_column(
         ForeignKey(StatisticsData.id),
-        unique=True,
     )
 
     symbols_per_minute: Mapped[int] = mapped_column()
