@@ -17,8 +17,8 @@ class Profile(Base):
         unique=True,
     )
 
-    touch_typing: Mapped[Optional[str]] = mapped_column(
-        String,
+    touch_typing: Mapped[bool] = mapped_column(
+        default=False,
     )
     keyboard_type: Mapped[Optional[str]] = mapped_column(
         String,
