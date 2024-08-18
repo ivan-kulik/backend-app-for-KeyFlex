@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 
 
 class Profile(Base):
-    user_id: Mapped[int] = mapped_column(
-        ForeignKey(User.id),
+    user_reference: Mapped[str] = mapped_column(
+        ForeignKey(User.username),
         unique=True,
     )
 
