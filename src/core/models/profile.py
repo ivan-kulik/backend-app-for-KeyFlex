@@ -1,7 +1,8 @@
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import ForeignKey, String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from typing import TYPE_CHECKING, Optional
+from datetime import datetime
 
 from .base import Base
 from .user import User
@@ -27,6 +28,10 @@ class Profile(Base):
     )
     location: Mapped[Optional[str]] = mapped_column(
         String,
+    )
+    register_date: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.date,
     )
     about_user: Mapped[Optional[str]] = mapped_column(
         String,

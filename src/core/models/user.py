@@ -1,9 +1,8 @@
 from fastapi_users.db import SQLAlchemyBaseUserTable
-from sqlalchemy import String, DateTime
+from sqlalchemy import String
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from datetime import datetime
 from typing import List, TYPE_CHECKING
 
 from .base import Base
@@ -19,9 +18,6 @@ if TYPE_CHECKING:
 class User(Base, SQLAlchemyBaseUserTable[UserIdType]):
     username: Mapped[str] = mapped_column(
         String(length=20), unique=True, index=True, nullable=False
-    )
-    registration_date: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow, nullable=False
     )
 
     oauth_accounts: Mapped[List["OAuthAccount"]] = relationship(
