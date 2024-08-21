@@ -1,6 +1,5 @@
-from sqlalchemy import select, insert
+from sqlalchemy import select
 
-from .base_repository import SQLAlchemyRepository
 from core.models import (
     StandardModeStats,
     ExtendedModeStats,
@@ -8,65 +7,75 @@ from core.models import (
     EnglishModeStats,
     ExtremeModeStats,
     UserModeStats,
-    User,
     StatisticsData,
 )
-from ..db.db_helper import db_helper
+from core.schemas.stats import AddStatisticsData
+from .base_repository import SQLAlchemyRepository
+from core.db.db_helper import db_helper
 
 
-class StatsRepository(SQLAlchemyRepository):
+class ModesStatsRepository(SQLAlchemyRepository):
     model = StatisticsData
 
-    async def add_one(self, username):
+    async def get_stats_id(self, user_reference: str) -> int:
         async with db_helper.session_factory() as session:
-            stmt = (
-                insert(self.model).values(user_reference=username).returning(self.model)
+            stmt = select(self.model.id).where(
+                self.model.user_reference == user_reference
             )
-            res = await session.execute(stmt)
-            await session.commit()
-            return res.scalar_one()
+            stats_id = await session.scalar(stmt)
+        return stats_id
 
 
-class StatsDataRepository(SQLAlchemyRepository):
-    async def add_stats(self, stats_data: dict, cur_user: User):
+class BaseStatsRepository(SQLAlchemyRepository):
+    def __init__(self, stats_id: int):
+        self.stats_id = stats_id
+
+    async def add_stats(self, stats_data: AddStatisticsData):
+        stats_data["stats_id"] = self.stats_id
+        return await self.add_one(stats_data)
+
+    async def get_symbols_per_minute_stats(self):
         async with db_helper.session_factory() as session:
-            stmt = select(StatisticsData).where(
-                StatisticsData.user_reference == cur_user.username
+            stmt = select(self.model.symbols_per_minute).where(
+                self.model.stats_id == self.stats_id
             )
-            res = await session.execute(stmt)
-            stats_data["stats_id"] = res.scalar().id
-            await self.add_one(stats_data)
+            data = await session.scalars(stmt)
+        return data.all()
+
+    async def get_accuracy_stats(self):
+        async with db_helper.session_factory() as session:
+            stmt = select(self.model.accuracy_percentage).where(
+                self.model.stats_id == self.stats_id
+            )
+            data = await session.scalars(stmt)
+        return data.all()
+
+    async def calculate_average_accuracy(self):
+        data = await self.get_accuracy_stats()
+        if len(data):
+            average_accuracy = sum(data) / len(data)
+            return float(f"{average_accuracy:.2f}")
 
 
-class StandardModeStatsRepository(StatsDataRepository):
+class StandardModeStatsRepository(BaseStatsRepository):
     model = StandardModeStats
 
 
-class ExtendedModeStatsRepository(StatsDataRepository):
+class ExtendedModeStatsRepository(BaseStatsRepository):
     model = ExtendedModeStats
 
 
-class TextModeStatsRepository(StatsDataRepository):
+class TextModeStatsRepository(BaseStatsRepository):
     model = TextModeStats
 
 
-class EnglishModeStatsRepository(StatsDataRepository):
+class EnglishModeStatsRepository(BaseStatsRepository):
     model = EnglishModeStats
 
 
-class ExtremeModeStatsRepository(StatsDataRepository):
+class ExtremeModeStatsRepository(BaseStatsRepository):
     model = ExtremeModeStats
 
 
-class UserModeStatsRepository(StatsDataRepository):
+class UserModeStatsRepository(BaseStatsRepository):
     model = UserModeStats
-
-
-stats_repos = {
-    "standard": StandardModeStatsRepository,
-    "extended": ExtendedModeStatsRepository,
-    "text": TextModeStatsRepository,
-    "english": EnglishModeStatsRepository,
-    "extreme": ExtremeModeStatsRepository,
-    "user": UserModeStatsRepository,
-}
