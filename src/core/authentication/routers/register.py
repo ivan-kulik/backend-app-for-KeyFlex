@@ -10,8 +10,10 @@ from core.authentication.auth_exceptions import (
     UserNameAlreadyExists,
     UserEmailAlreadyExists,
 )
-from api.dependencies.stats_service import get_stats_service
-from core.services.stats import StatsService
+from api.dependencies.stats_service import get_modes_stats_service
+from api.dependencies.profile_service import get_profile_service
+from core.services.stats import ModesStatsService
+from core.services.profile import ProfileService
 
 
 def get_register_router(
@@ -65,13 +67,15 @@ def get_register_router(
         request: Request,
         user_create: user_create_schema,
         user_manager: BaseUserManager[models.UP, models.ID] = Depends(get_user_manager),
-        stats_service: StatsService = Depends(get_stats_service),
+        modes_stats_service: ModesStatsService = Depends(get_modes_stats_service),
+        profile_service: ProfileService = Depends(get_profile_service),
     ):
         try:
             created_user = await user_manager.create(
                 user_create, safe=True, request=request
             )
-            await stats_service.add_stats(created_user.username)
+            await modes_stats_service.create_stats_data_row(created_user.username)
+            await profile_service.create_profile(created_user.username)
         except UserNameAlreadyExists:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
