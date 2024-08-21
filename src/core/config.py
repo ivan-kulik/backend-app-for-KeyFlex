@@ -15,6 +15,7 @@ class APIPrefix(BaseModel):
     auth: str = "/auth"
     users: str = "/users"
     stats: str = "/stats"
+    profiles: str = "/profiles"
 
     @property
     def bearer_token_url(self) -> str:
