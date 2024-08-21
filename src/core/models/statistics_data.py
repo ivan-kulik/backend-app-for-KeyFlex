@@ -47,7 +47,7 @@ class BaseStats:
     )
 
     symbols_per_minute: Mapped[int] = mapped_column()
-    accuracy_percentage: Mapped[int] = mapped_column()
+    accuracy_percentage: Mapped[float] = mapped_column()
 
 
 class StandardModeStats(
