@@ -1,10 +1,6 @@
-from core.services.stats import StatsService, StatsDataService
-from core.repositories.stats import StatsRepository
+from core.services.stats import ModesStatsService
+from core.repositories.stats import ModesStatsRepository
 
 
-def get_stats_service():
-    return StatsService(StatsRepository)
-
-
-def get_stats_data_service():
-    return StatsDataService()
+def get_modes_stats_service():
+    return ModesStatsService(ModesStatsRepository)
