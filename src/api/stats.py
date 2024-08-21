@@ -4,11 +4,11 @@ from typing import Annotated
 
 from core.config import settings
 from core.schemas.stats import AddStatisticsData
-from core.services.stats import StatsDataService
+from core.services.stats import ModesStatsService
 from core.models import User
 from .routers_helper import routers_helper
 
-from api.dependencies.stats_service import get_stats_data_service
+from api.dependencies.stats_service import get_modes_stats_service
 
 
 router = APIRouter(
@@ -24,12 +24,28 @@ current_active_verified_user = routers_helper.current_user(
 
 @router.post("/add_stats", status_code=status.HTTP_201_CREATED)
 async def add_statistics(
-    add_statistics_data: AddStatisticsData,
     user: Annotated[User, Depends(current_active_verified_user)],
-    stats_data_service: Annotated[StatsDataService, Depends(get_stats_data_service)],
+    add_statistics_data: AddStatisticsData,
+    modes_stats_service: Annotated[
+        ModesStatsService,
+        Depends(get_modes_stats_service),
+    ],
 ):
-    stats_id = await stats_data_service.add_stats_data(
+    await modes_stats_service.add_stats_data(
         add_statistics_data,
         user,
     )
-    return stats_id
+
+
+@router.get("/get_all_stats", status_code=status.HTTP_200_OK)
+async def get_all_statistics(
+    user: Annotated[User, Depends(current_active_verified_user)],
+    modes_stats_service: Annotated[
+        ModesStatsService,
+        Depends(get_modes_stats_service),
+    ],
+):
+    stats_data = await modes_stats_service.get_all_stats(
+        cur_user=user,
+    )
+    return stats_data
