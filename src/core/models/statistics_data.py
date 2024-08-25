@@ -17,6 +17,7 @@ class StatisticsData(Base):
             ondelete="CASCADE",
         ),
         unique=True,
+        index=True,
     )
     user: Mapped["User"] = relationship(
         back_populates="statistics_data",
