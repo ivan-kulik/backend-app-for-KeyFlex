@@ -18,6 +18,7 @@ class Profile(Base):
             ondelete="CASCADE",
         ),
         unique=True,
+        index=True,
     )
 
     touch_typing: Mapped[bool] = mapped_column(
@@ -46,3 +47,6 @@ class Profile(Base):
     achievements: Mapped["Achievements"] = relationship(
         back_populates="profile",
     )
+
+    def __repr__(self) -> str:
+        return f"<Profile: {self.user_reference!r}>"
