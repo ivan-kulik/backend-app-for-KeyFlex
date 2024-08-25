@@ -1,5 +1,5 @@
-from typing import List
 from datetime import datetime
+from typing import List
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -52,11 +52,15 @@ class BaseStats:
             StatisticsData.id,
             ondelete="CASCADE",
         ),
+        index=True,
     )
 
     symbols_per_minute: Mapped[int] = mapped_column()
     accuracy_percentage: Mapped[float] = mapped_column()
-    added_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    added_at: Mapped[datetime] = mapped_column(
+        default=datetime.utcnow,
+        index=True,
+    )
 
 
 class StandardModeStats(
