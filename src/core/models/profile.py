@@ -1,8 +1,8 @@
+from datetime import date
+from typing import TYPE_CHECKING, Optional
+
 from sqlalchemy import ForeignKey, String, Date
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from typing import TYPE_CHECKING, Optional
-from datetime import date
 
 from .base import Base
 from .user import User
@@ -13,7 +13,10 @@ if TYPE_CHECKING:
 
 class Profile(Base):
     user_reference: Mapped[str] = mapped_column(
-        ForeignKey(User.username),
+        ForeignKey(
+            User.username,
+            ondelete="CASCADE",
+        ),
         unique=True,
     )
 

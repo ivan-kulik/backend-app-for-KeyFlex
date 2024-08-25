@@ -9,7 +9,10 @@ class Achievements(Base):
     __tablename__ = "achievements"
 
     profile_id: Mapped[int] = mapped_column(
-        ForeignKey(Profile.id),
+        ForeignKey(
+            Profile.id,
+            ondelete="CASCADE",
+        ),
         unique=True,
     )
 

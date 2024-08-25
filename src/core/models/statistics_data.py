@@ -12,7 +12,10 @@ class StatisticsData(Base):
     __tablename__ = "statistics_data"
 
     user_reference: Mapped[str] = mapped_column(
-        ForeignKey(User.username),
+        ForeignKey(
+            User.username,
+            ondelete="CASCADE",
+        ),
         unique=True,
     )
     user: Mapped["User"] = relationship(
@@ -43,7 +46,10 @@ class BaseStats:
     __abstract__ = True
 
     stats_id: Mapped[int] = mapped_column(
-        ForeignKey(StatisticsData.id),
+        ForeignKey(
+            StatisticsData.id,
+            ondelete="CASCADE",
+        ),
     )
 
     symbols_per_minute: Mapped[int] = mapped_column()
