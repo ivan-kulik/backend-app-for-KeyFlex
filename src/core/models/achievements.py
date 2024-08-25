@@ -14,6 +14,7 @@ class Achievements(Base):
             ondelete="CASCADE",
         ),
         unique=True,
+        index=True,
     )
 
     forty_characters_per_minute: Mapped[bool] = mapped_column(
