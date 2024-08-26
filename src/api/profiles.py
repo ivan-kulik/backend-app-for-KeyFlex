@@ -1,14 +1,13 @@
-from fastapi import APIRouter, Depends, status
-
 from typing import Annotated
 
+from fastapi import APIRouter, Depends, status
+
+from api.dependencies.profile_service import get_profile_service
 from core.config import settings
 from core.models import User
-from core.schemas.profile import ProfileUpdate
+from core.schemas.profile import ProfileUpdate, GetProfileData
 from core.services.profile import ProfileService
-from api.dependencies.profile_service import get_profile_service
 from .routers_helper import routers_helper
-
 
 router = APIRouter(
     prefix=settings.api.profiles,
@@ -22,7 +21,10 @@ current_active_verified_user = routers_helper.current_user(
 )
 
 
-@router.patch("/update", status_code=status.HTTP_202_ACCEPTED)
+@router.patch(
+    "/update",
+    status_code=status.HTTP_202_ACCEPTED,
+)
 async def update_profile(
     user: Annotated[User, Depends(current_active_verified_user)],
     profile_service: Annotated[ProfileService, Depends(get_profile_service)],
@@ -34,7 +36,11 @@ async def update_profile(
     )
 
 
-@router.get("/get_info", status_code=status.HTTP_200_OK)
+@router.get(
+    "/get_info",
+    status_code=status.HTTP_200_OK,
+    response_model=GetProfileData,
+)
 async def get_profile_data(
     user: Annotated[User, Depends(current_active_verified_user)],
     profile_service: Annotated[ProfileService, Depends(get_profile_service)],
