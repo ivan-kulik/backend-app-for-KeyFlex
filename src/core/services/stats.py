@@ -1,7 +1,10 @@
-from core.repositories import ModesStatsRepository, stats_repos
-from core.schemas.stats import AddStatisticsData
-
 from core.models import User
+from core.repositories import ModesStatsRepository, stats_repos
+from core.schemas.stats import (
+    AddStatisticsData,
+    GetModesStatsData,
+    GetLastSessionsStatsData,
+)
 
 
 class ModesStatsService:
@@ -25,54 +28,78 @@ class ModesStatsService:
 
         await stats_repo(stats_id).add_stats(stats_data)
 
-    async def collect_all_stats(self, user_reference: str):
+    async def collect_modes_stats_data(self, user_reference: str):
         stats_id = await self.modes_stats_repo.get_stats_id(
             user_reference=user_reference
         )
 
-        symbols_per_minute_stats = []
-        average_accuracy_stats = []
-        classes_number = []
+        symbols_per_minute_stats: dict[str, list[int]] = {}
+        average_accuracy_stats: dict[str, float] = {}
+        number_training_sessions_stats: dict[str, int] = {}
 
-        for repo in stats_repos.values():
+        for repo_title, repo in stats_repos.items():
             stats_repo = repo(stats_id)
 
             symbols = await stats_repo.get_symbols_per_minute_stats()
             average_accuracy = await stats_repo.calculate_average_accuracy()
 
-            symbols_per_minute_stats.append(symbols)
-            average_accuracy_stats.append(average_accuracy)
-            classes_number.append(len(symbols))
+            symbols_per_minute_stats[repo_title] = symbols
+            average_accuracy_stats[repo_title] = average_accuracy
+            number_training_sessions_stats[repo_title] = len(symbols)
 
-        return symbols_per_minute_stats, average_accuracy_stats, classes_number
-
-    async def get_all_stats(self, cur_user: User):
-        symbols_per_minute_stats, average_accuracy_stats, classes_number = (
-            await self.collect_all_stats(user_reference=cur_user.username)
+        return (
+            symbols_per_minute_stats,
+            average_accuracy_stats,
+            number_training_sessions_stats,
         )
-        return {
-            "mainStats": {
-                "standard_mode": symbols_per_minute_stats[0],
-                "extended_mode": symbols_per_minute_stats[1],
-                "text_mode": symbols_per_minute_stats[2],
-                "english_mode": symbols_per_minute_stats[3],
-                "extreme_mode": symbols_per_minute_stats[4],
-                "user_mode": symbols_per_minute_stats[5],
-            },
-            "average_accuracy": {
-                "standard_mode": average_accuracy_stats[0],
-                "extended_mode": average_accuracy_stats[1],
-                "text_mode": average_accuracy_stats[2],
-                "english_mode": average_accuracy_stats[3],
-                "extreme_mode": average_accuracy_stats[4],
-                "user_mode": average_accuracy_stats[5],
-            },
-            "classes": {
-                "standard_mode": classes_number[0],
-                "extended_mode": classes_number[1],
-                "text_mode": classes_number[2],
-                "english_mode": classes_number[3],
-                "extreme_mode": classes_number[4],
-                "user_mode": classes_number[5],
-            },
+
+    async def get_modes_stats_data(self, cur_user: User):
+        (
+            symbols_per_minute_stats,
+            average_accuracy_stats,
+            number_training_sessions_stats,
+        ) = await self.collect_modes_stats_data(user_reference=cur_user.username)
+
+        return GetModesStatsData(
+            symbols_per_minute_stats=symbols_per_minute_stats,
+            average_accuracy_stats=average_accuracy_stats,
+            number_training_sessions_stats=number_training_sessions_stats,
+        )
+
+    async def get_last_sessions_stats_data(self, cur_user):
+        stats_data = await self.modes_stats_repo.get_last_sessions_data(
+            user_reference=cur_user.username
+        )
+        symbols_per_minute: list[int] = [row[0] for row in stats_data]
+        accuracy: list[float] = [row[1] for row in stats_data]
+
+        symbols_per_minute_stats = {
+            "the_best_result": max(symbols_per_minute),
+            "the_worst_result": min(symbols_per_minute),
+            "average_result": f"{sum(symbols_per_minute) / len(symbols_per_minute):.2f}",
         }
+        accuracy_stats = {
+            "the_best_result": max(accuracy),
+            "the_worst_result": min(accuracy),
+            "average_result": f"{sum(accuracy) / len(accuracy):.2f}",
+        }
+        the_most_popular_mode: str = max(
+            stats_data,
+            key=lambda i: stats_data.count(i[3]),
+        )[3]
+        mode_with_the_highest_symbols_per_minute_result: str = max(
+            stats_data,
+            key=lambda i: i[0],
+        )[3]
+        mode_with_the_highest_accuracy_result: str = max(
+            stats_data,
+            key=lambda i: i[1],
+        )[3]
+
+        return GetLastSessionsStatsData(
+            symbols_per_minute_stats=symbols_per_minute_stats,
+            accuracy_stats=accuracy_stats,
+            the_most_popular_mode=the_most_popular_mode,
+            mode_with_the_highest_symbols_per_minute_result=mode_with_the_highest_symbols_per_minute_result,
+            mode_with_the_highest_accuracy_result=mode_with_the_highest_accuracy_result,
+        )

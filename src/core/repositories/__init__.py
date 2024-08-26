@@ -18,10 +18,10 @@ from .stats import (
 
 
 stats_repos = {
-    "standard": StandardModeStatsRepository,
-    "extended": ExtendedModeStatsRepository,
-    "text": TextModeStatsRepository,
-    "english": EnglishModeStatsRepository,
-    "extreme": ExtremeModeStatsRepository,
-    "user": UserModeStatsRepository,
+    "standard_mode": StandardModeStatsRepository,
+    "extended_mode": ExtendedModeStatsRepository,
+    "text_mode": TextModeStatsRepository,
+    "english_mode": EnglishModeStatsRepository,
+    "extreme_mode": ExtremeModeStatsRepository,
+    "user_mode": UserModeStatsRepository,
 }
