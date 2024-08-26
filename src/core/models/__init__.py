@@ -27,3 +27,13 @@ from .statistics_data import (
     ExtremeModeStats,
     UserModeStats,
 )
+
+
+stats_models = {
+    "standard_mode": StandardModeStats,
+    "extended_mode": ExtendedModeStats,
+    "text_mode": TextModeStats,
+    "english_mode": EnglishModeStats,
+    "extreme_mode": ExtremeModeStats,
+    "user_mode": UserModeStats,
+}

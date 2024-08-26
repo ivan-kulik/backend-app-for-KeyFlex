@@ -1,5 +1,6 @@
-from sqlalchemy import select
+from sqlalchemy import select, union_all, literal
 
+from core.db.db_helper import db_helper
 from core.models import (
     StandardModeStats,
     ExtendedModeStats,
@@ -9,9 +10,9 @@ from core.models import (
     UserModeStats,
     StatisticsData,
 )
+from core.models import stats_models
 from core.schemas.stats import AddStatisticsData
 from .base_repository import SQLAlchemyRepository
-from core.db.db_helper import db_helper
 
 
 class ModesStatsRepository(SQLAlchemyRepository):
@@ -24,6 +25,33 @@ class ModesStatsRepository(SQLAlchemyRepository):
             )
             stats_id = await session.scalar(stmt)
         return stats_id
+
+    async def get_last_sessions_data(self, user_reference: str):
+        queries = []
+        stats_id = await self.get_stats_id(user_reference)
+        for model_name, model in stats_models.items():
+            query = (
+                select(
+                    model.symbols_per_minute,
+                    model.accuracy_percentage,
+                    model.added_at,
+                    literal(model_name).label("source_table"),
+                )
+                .where(model.stats_id == stats_id)
+                .order_by(model.added_at.desc())
+                .limit(10)
+            )
+            queries.append(query)
+
+        combined_query = union_all(*queries)
+        subquery = combined_query.subquery()
+        final_query = select(subquery).order_by(subquery.c.added_at.desc()).limit(10)
+
+        async with db_helper.session_factory() as session:
+            res = await session.execute(final_query)
+
+        last_attempts_stats = res.fetchall()
+        return last_attempts_stats
 
 
 class BaseStatsRepository(SQLAlchemyRepository):
