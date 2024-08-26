@@ -16,9 +16,8 @@ class AchievementsService:
 
     async def get_achievements(self, profile_id: int):
         data = await self.achievements_repo.get_achievements(profile_id=profile_id)
-        achievements = [
-            achieve
-            for achieve in data.__dict__.keys()
-            if data.__dict__[achieve] is True
-        ]
+
+        achievements = {
+            title: val for title, val in data.__dict__.items() if type(val) is bool
+        }
         return achievements
