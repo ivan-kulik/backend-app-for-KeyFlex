@@ -34,18 +34,24 @@ class BaseStatsRepository(SQLAlchemyRepository):
         stats_data["stats_id"] = self.stats_id
         return await self.add_one(stats_data)
 
-    async def get_symbols_per_minute_stats(self):
+    async def get_symbols_per_minute_stats(self, amount: int = 75):
         async with db_helper.session_factory() as session:
-            stmt = select(self.model.symbols_per_minute).where(
-                self.model.stats_id == self.stats_id
+            stmt = (
+                select(self.model.symbols_per_minute)
+                .where(self.model.stats_id == self.stats_id)
+                .order_by(self.model.id.desc())
+                .limit(amount)
             )
             data = await session.scalars(stmt)
         return data.all()
 
-    async def get_accuracy_stats(self):
+    async def get_accuracy_stats(self, amount: int = 75):
         async with db_helper.session_factory() as session:
-            stmt = select(self.model.accuracy_percentage).where(
-                self.model.stats_id == self.stats_id
+            stmt = (
+                select(self.model.accuracy_percentage)
+                .where(self.model.stats_id == self.stats_id)
+                .order_by(self.model.id.desc())
+                .limit(amount)
             )
             data = await session.scalars(stmt)
         return data.all()
