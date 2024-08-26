@@ -1,6 +1,7 @@
 from core.models import Profile, User
 from core.repositories.profile import ProfileRepository
 from . import achievements_service
+from core.schemas.profile import GetProfileData
 
 
 class ProfileService:
@@ -27,17 +28,21 @@ class ProfileService:
         )
 
     async def get_profile_data(self, cur_user: User):
-        data = await self.profile_repo.get_profile_data(cur_user=cur_user)
-        achievements = await achievements_service.get_achievements(profile_id=data.id)
+        data = await self.profile_repo.get_profile_data(
+            cur_user=cur_user,
+        )
+        achievements = await achievements_service.get_achievements(
+            profile_id=data.id,
+        )
 
-        profile_data = {
-            "name": data.user_reference,
-            "touch_typing": data.touch_typing,
-            "keyboard_type": data.keyboard_type,
-            "profession": data.profession,
-            "location": data.location,
-            "register_date": data.register_date,
-            "about_user": data.about_user,
-            "achievements": achievements,
-        }
+        profile_data = GetProfileData(
+            name=data.user_reference,
+            touch_typing=data.touch_typing,
+            keyboard_type=data.keyboard_type,
+            profession=data.profession,
+            location=data.location,
+            register_date=data.register_date,
+            about_user=data.about_user,
+            achievements=achievements,
+        )
         return profile_data
