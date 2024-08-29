@@ -35,3 +35,9 @@ router.include_router(
     prefix="/google",
     # tags=["Auth-With-Google"],
 )
+
+# /request-verify-token
+# /verify
+router.include_router(
+    router=routers_helper.get_verify_router(UserRead),
+)
