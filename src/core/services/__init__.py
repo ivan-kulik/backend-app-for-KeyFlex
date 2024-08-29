@@ -1,9 +1,12 @@
-__all__ = ("achievements_service",)
-
-from .achievements import AchievementsService
-from core.repositories import AchievementsRepository
-
-
-achievements_service: AchievementsService = AchievementsService(
-    AchievementsRepository,
+__all__ = (
+    "ProfileService",
+    "StatsDataService",
+    "ModesStatsService",
+    "LastSessionsStatsService",
 )
+
+from .profile import ProfileService
+from .achievements import AchievementsService
+from .stast_data import StatsDataService
+from .modes_stats import ModesStatsService
+from .last_sessions_stats import LastSessionsStatsService
