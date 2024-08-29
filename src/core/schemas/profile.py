@@ -17,9 +17,9 @@ class ProfileUpdate(BaseModel):
 class GetProfileData(BaseModel):
     name: str
     touch_typing: bool
-    keyboard_type: str
-    profession: str
-    location: str
+    keyboard_type: Optional[str]
+    profession: Optional[str]
+    location: Optional[str]
     register_date: date
-    about_user: str
+    about_user: Optional[str]
     achievements: Achievements
