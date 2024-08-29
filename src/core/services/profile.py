@@ -1,34 +1,41 @@
 from core.models import Profile, User
-from core.repositories.profile import ProfileRepository
-from . import achievements_service
+from core.repositories import (
+    ProfileRepo,
+    AchievementsRepo,
+)
 from core.schemas.profile import GetProfileData
+from .achievements import AchievementsService
+
+
+achievements_service: AchievementsService = AchievementsService(
+    AchievementsRepo,
+)
 
 
 class ProfileService:
-    def __init__(
-        self,
-        profile_repo: ProfileRepository,
-    ):
-        self.profile_repo: ProfileRepository = profile_repo()
+    def __init__(self, repo: ProfileRepo):
+        self.repo: ProfileRepo = repo()
 
     async def create_profile(self, username: str):
         data = {
             "user_reference": username,
         }
-        profile: Profile = await self.profile_repo.add_one(data)
+        profile: Profile = await self.repo.create_profile(
+            initial_data=data,
+        )
         await achievements_service.create_achievements_row(
             profile.id,
         )
         return profile
 
     async def update_profile(self, cur_user: User, profile_update: dict):
-        await self.profile_repo.update_profile_data(
+        await self.repo.update_profile_data(
             cur_user=cur_user,
             profile_update_data=profile_update,
         )
 
     async def get_profile_data(self, cur_user: User):
-        data = await self.profile_repo.get_profile_data(
+        data = await self.repo.get_profile_data(
             cur_user=cur_user,
         )
         achievements = await achievements_service.get_achievements(
