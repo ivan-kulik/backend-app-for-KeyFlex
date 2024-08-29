@@ -10,10 +10,13 @@ from core.authentication.auth_exceptions import (
     UserNameAlreadyExists,
     UserEmailAlreadyExists,
 )
-from api.dependencies.stats_service import get_modes_stats_service
+from core.services import (
+    StatsDataService,
+    ProfileService,
+)
+
+from api.dependencies.stats_services import get_stats_data_service
 from api.dependencies.profile_service import get_profile_service
-from core.services.stats import ModesStatsService
-from core.services.profile import ProfileService
 
 
 def get_register_router(
@@ -66,15 +69,17 @@ def get_register_router(
     async def register(
         request: Request,
         user_create: user_create_schema,
-        user_manager: BaseUserManager[models.UP, models.ID] = Depends(get_user_manager),
-        modes_stats_service: ModesStatsService = Depends(get_modes_stats_service),
+        user_manager: BaseUserManager[models.UP, models.ID] = Depends(
+            get_user_manager,
+        ),
+        stats_data_service: StatsDataService = Depends(get_stats_data_service),
         profile_service: ProfileService = Depends(get_profile_service),
     ):
         try:
             created_user = await user_manager.create(
                 user_create, safe=True, request=request
             )
-            await modes_stats_service.create_stats_data_row(created_user.username)
+            await stats_data_service.create_stats_data_row(cur_user=created_user)
             await profile_service.create_profile(created_user.username)
         except UserNameAlreadyExists:
             raise HTTPException(
