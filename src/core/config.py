@@ -40,6 +40,11 @@ class DatabaseConfig(BaseModel):
     }
 
 
+class StatsAmountConfig(BaseModel):
+    modes_stats: int = 75
+    last_sessions_stats: int = 10
+
+
 class AccessToken(BaseModel):
     secret_key: str
     lifetime_seconds: int = 3600
@@ -64,6 +69,7 @@ class Settings(BaseSettings):
     db: DatabaseConfig
     access_token: AccessToken
     google_oauth2: GoogleOAuth2Config
+    amount_of_stats: StatsAmountConfig = StatsAmountConfig()
 
 
 settings = Settings()
