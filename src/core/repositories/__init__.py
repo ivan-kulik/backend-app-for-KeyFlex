@@ -1,27 +1,13 @@
 __all__ = (
-    "ProfileRepository",
-    "AchievementsRepository",
-    "stats_repos",
+    "ProfileRepo",
+    "AchievementsRepo",
+    "StatsDataRepo",
+    "ModesStatsRepo",
+    "LastSessionsStatsRepo",
 )
 
-from .profile import ProfileRepository
-from .achievements import AchievementsRepository
-from .stats import (
-    ModesStatsRepository,
-    StandardModeStatsRepository,
-    ExtendedModeStatsRepository,
-    TextModeStatsRepository,
-    EnglishModeStatsRepository,
-    ExtremeModeStatsRepository,
-    UserModeStatsRepository,
-)
-
-
-stats_repos = {
-    "standard_mode": StandardModeStatsRepository,
-    "extended_mode": ExtendedModeStatsRepository,
-    "text_mode": TextModeStatsRepository,
-    "english_mode": EnglishModeStatsRepository,
-    "extreme_mode": ExtremeModeStatsRepository,
-    "user_mode": UserModeStatsRepository,
-}
+from .profile import ProfileRepo
+from .achievements import AchievementsRepo
+from .stats_data import StatsDataRepo
+from .modes_stats import ModesStatsRepo
+from .last_sessions_stats import LastSessionsStatsRepo
