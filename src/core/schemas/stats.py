@@ -17,12 +17,12 @@ class SymbolsPerMinuteStats(BaseModel):
 
 
 class AverageAccuracyStats(BaseModel):
-    standard_mode: float
-    extended_mode: float
-    text_mode: float
-    english_mode: float
-    extreme_mode: float
-    user_mode: float
+    standard_mode: float = 0.0
+    extended_mode: float = 0.0
+    text_mode: float = 0.0
+    english_mode: float = 0.0
+    extreme_mode: float = 0.0
+    user_mode: float = 0.0
 
 
 class NumberTrainingSessionsStats(BaseModel):
@@ -53,8 +53,10 @@ class LastSessionsAccuracyStats(BaseModel):
 
 
 class GetLastSessionsStatsData(BaseModel):
+    symbols_per_minute_values: list[int]
+    modes_types: list[str]
     symbols_per_minute_stats: LastSessionsSymbolsPerMinuteStats
     accuracy_stats: LastSessionsAccuracyStats
     the_most_popular_mode: str
-    mode_with_the_highest_symbols_per_minute_result: str
-    mode_with_the_highest_accuracy_result: str
+    smp_best_mode: str
+    accuracy_best_mode: str
