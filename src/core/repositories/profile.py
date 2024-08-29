@@ -1,12 +1,25 @@
-from sqlalchemy import select
+from sqlalchemy import select, insert
 
 from core.db.db_helper import db_helper
 from core.models.profile import Profile
-from .base_repository import SQLAlchemyRepository
 
 
-class ProfileRepository(SQLAlchemyRepository):
+class ProfileRepo:
     model = Profile
+
+    async def get_profile_id(self, user_reference: str):
+        async with db_helper.session_factory() as session:
+            stmt = select(self.model.id).where(
+                self.model.user_reference == user_reference,
+            )
+            res = await session.scalar(stmt)
+        return res
+
+    async def create_profile(self, initial_data):
+        async with db_helper.session_factory() as session:
+            stmt = insert(self.model).values(**initial_data).returning(self.model)
+            await session.execute(stmt)
+            await session.commit()
 
     async def get_profile_data(self, cur_user):
         async with db_helper.session_factory() as session:
@@ -14,7 +27,7 @@ class ProfileRepository(SQLAlchemyRepository):
                 self.model.user_reference == cur_user.username,
             )
             data = await session.scalar(stmt)
-            return data
+        return data
 
     async def update_profile_data(self, cur_user, profile_update_data):
         async with db_helper.session_factory() as session:
