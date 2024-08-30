@@ -9,8 +9,7 @@ from fastapi_users import (
     models,
     schemas,
 )
-from fastapi_users.jwt import decode_jwt
-import jwt
+from fastapi_users.jwt import generate_jwt
 
 from core.config import settings
 from core.models import User
@@ -86,6 +85,27 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, UserIdType]):
             await self.user_db.update(user, {"hashed_password": updated_password_hash})
 
         return user
+
+    async def request_verify(
+        self, user: models.UP, request: Optional[Request] = None
+    ) -> str:
+        if not user.is_active:
+            raise exceptions.UserInactive()
+        if user.is_verified:
+            raise exceptions.UserAlreadyVerified()
+
+        token_data = {
+            "sub": str(user.id),
+            "email": user.email,
+            "aud": self.verification_token_audience,
+        }
+        token = generate_jwt(
+            token_data,
+            self.verification_token_secret,
+            self.verification_token_lifetime_seconds,
+        )
+        await self.on_after_request_verify(user, token, request)
+        return token
 
     async def on_after_register(
         self,
