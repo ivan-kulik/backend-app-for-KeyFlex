@@ -87,44 +87,6 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, UserIdType]):
 
         return user
 
-    async def verify(self, token: str, request: Optional[Request] = None) -> models.UP:
-        try:
-            data = decode_jwt(
-                token,
-                self.verification_token_secret,
-                [self.verification_token_audience],
-            )
-        except jwt.PyJWTError:
-            raise exceptions.InvalidVerifyToken()
-
-        try:
-            user_id = data["sub"]
-            email = data["email"]
-        except KeyError:
-            raise exceptions.InvalidVerifyToken()
-
-        try:
-            user = await self.get_by_email(email)
-        except exceptions.UserNotExists:
-            raise exceptions.InvalidVerifyToken()
-
-        try:
-            parsed_id = self.parse_id(user_id)
-        except exceptions.InvalidID:
-            raise exceptions.InvalidVerifyToken()
-
-        if parsed_id != user.id:
-            raise exceptions.InvalidVerifyToken()
-
-        if user.is_verified:
-            raise exceptions.UserAlreadyVerified()
-
-        verified_user = await self._update(user, {"is_verified": True})
-
-        await self.on_after_verify(verified_user, request)
-
-        return verified_user
-
     async def on_after_register(
         self,
         user: User,
