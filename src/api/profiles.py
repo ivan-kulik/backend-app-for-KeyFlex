@@ -7,17 +7,11 @@ from core.config import settings
 from core.models import User
 from core.schemas.profile import ProfileUpdate, GetProfileData
 from core.services.profile import ProfileService
-from .routers_helper import routers_helper
+from api.dependencies import current_active_verified_user
 
 router = APIRouter(
     prefix=settings.api.profiles,
     tags=["Profiles"],
-)
-
-
-current_active_verified_user = routers_helper.current_user(
-    active=True,
-    # verified=True,
 )
 
 

@@ -19,17 +19,12 @@ from core.services import (
     ModesStatsService,
     LastSessionsStatsService,
 )
-from .routers_helper import routers_helper
+from api.dependencies import current_active_verified_user
 
 
 router = APIRouter(
     prefix=settings.api.stats,
     tags=["Statistics"],
-)
-
-current_active_verified_user = routers_helper.current_user(
-    active=True,
-    # verified=True,
 )
 
 
