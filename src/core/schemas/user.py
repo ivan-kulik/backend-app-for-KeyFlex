@@ -1,7 +1,7 @@
 from fastapi_users import schemas
 from typing import Annotated, Optional
 from annotated_types import MinLen, MaxLen
-from pydantic import EmailStr
+from pydantic import EmailStr, BaseModel
 
 
 from core.types.user_id import UserIdType
@@ -15,7 +15,7 @@ class UserCreate(schemas.BaseUserCreate):
     username: Annotated[str, MinLen(3), MaxLen(20)]
 
 
-class UserUpdate:
+class UserUpdate(BaseModel):
     username: Optional[str] = None
     email: Optional[EmailStr] = None
     password: Optional[str] = None
