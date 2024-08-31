@@ -20,13 +20,12 @@ class ProfileService:
         data = {
             "user_reference": username,
         }
-        profile: Profile = await self.repo.create_profile(
+        profile_id: Profile = await self.repo.create_profile(
             initial_data=data,
         )
         await achievements_service.create_achievements_row(
-            profile.id,
+            profile_id,
         )
-        return profile
 
     async def update_profile(self, cur_user: User, profile_update: dict):
         await self.repo.update_profile_data(

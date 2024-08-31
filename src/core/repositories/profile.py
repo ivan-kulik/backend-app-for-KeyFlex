@@ -17,9 +17,10 @@ class ProfileRepo:
 
     async def create_profile(self, initial_data):
         async with db_helper.session_factory() as session:
-            stmt = insert(self.model).values(**initial_data).returning(self.model)
-            await session.execute(stmt)
+            stmt = insert(self.model).values(**initial_data).returning(self.model.id)
+            res = await session.execute(stmt)
             await session.commit()
+        return res.scalar_one()
 
     async def get_profile_data(self, cur_user):
         async with db_helper.session_factory() as session:
