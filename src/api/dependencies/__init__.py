@@ -4,6 +4,7 @@ __all__ = (
     "get_modes_stats_service",
     "get_last_sessions_stats_service",
     "current_active_verified_user",
+    "current_active_user",
 )
 
 from .profile_service import get_profile_service
@@ -12,4 +13,7 @@ from .stats_services import (
     get_modes_stats_service,
     get_last_sessions_stats_service,
 )
-from .current_active_verified_user import current_active_verified_user
+from .current_user import (
+    current_active_verified_user,
+    current_active_user,
+)
