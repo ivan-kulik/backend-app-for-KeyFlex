@@ -57,6 +57,13 @@ class GoogleOAuth2Config(BaseModel):
     GOOGLE_OAUTH_CLIENT_SECRET: str
 
 
+class EmailVerificationConfig(BaseModel):
+    SMTP_USER: str
+    SMTP_PASSWORD: str
+    SMTP_HOST: str = "smtp.gmail.com"
+    SMTP_PORT: int = 465
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -67,9 +74,10 @@ class Settings(BaseSettings):
     run: RunConfig = RunConfig()
     api: APIPrefix = APIPrefix()
     db: DatabaseConfig
+    amount_of_stats: StatsAmountConfig = StatsAmountConfig()
     access_token: AccessToken
     google_oauth2: GoogleOAuth2Config
-    amount_of_stats: StatsAmountConfig = StatsAmountConfig()
+    email_verification: EmailVerificationConfig
 
 
 settings = Settings()
