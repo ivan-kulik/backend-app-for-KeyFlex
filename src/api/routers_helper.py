@@ -9,6 +9,7 @@ from core.models import User
 from core.authentication.routers import (
     get_register_router,
     get_auth_router,
+    get_verify_router,
 )
 from core.types.user_id import UserIdType
 from api.dependencies.authentication.user_manager import get_user_manager
@@ -33,12 +34,17 @@ class CustomFastAPIUsers(FastAPIUsers[User, UserIdType]):
     def get_auth_router(
         self, backend: AuthenticationBackend, requires_verification: bool = False
     ) -> APIRouter:
-
         return get_auth_router(
             backend,
             self.get_user_manager,
             self.authenticator,
             requires_verification,
+        )
+
+    def get_verify_router(self, user_schema: Type[schemas.U]) -> APIRouter:
+        return get_verify_router(
+            get_user_manager=self.get_user_manager,
+            user_schema=user_schema,
         )
 
 
