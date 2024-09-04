@@ -1,4 +1,5 @@
 __all__ = (
+    "UserRepo",
     "ProfileRepo",
     "AchievementsRepo",
     "StatsDataRepo",
@@ -6,6 +7,7 @@ __all__ = (
     "LastSessionsStatsRepo",
 )
 
+from .user import UserRepo
 from .profile import ProfileRepo
 from .achievements import AchievementsRepo
 from .stats_data import StatsDataRepo
