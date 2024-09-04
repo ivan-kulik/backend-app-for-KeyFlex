@@ -29,13 +29,13 @@ class ProfileService:
 
     async def update_profile(self, cur_user: User, profile_update: dict):
         await self.repo.update_profile_data(
-            cur_user=cur_user,
+            user_reference=cur_user.username,
             profile_update_data=profile_update,
         )
 
     async def get_profile_data(self, cur_user: User):
         data = await self.repo.get_profile_data(
-            cur_user=cur_user,
+            user_reference=cur_user.username,
         )
         achievements = await achievements_service.get_achievements(
             profile_id=data.id,
