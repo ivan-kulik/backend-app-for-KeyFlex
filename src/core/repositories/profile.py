@@ -1,6 +1,6 @@
 from sqlalchemy import select, insert
 
-from core.db.db_helper import db_helper
+from core.utils.db_helper import db_helper
 from core.models.profile import Profile
 
 

@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.db.db_helper import db_helper
+from core.utils.db_helper import db_helper
 from core.models import User
 
 
