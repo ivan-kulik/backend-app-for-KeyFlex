@@ -1,21 +1,13 @@
-from pydantic import BaseModel
-
+from pydantic import BaseModel, HttpUrl
 from typing import Optional
 from datetime import date
 
 from .achievements import Achievements
 
 
-class ProfileUpdate(BaseModel):
-    touch_typing: Optional[bool] = None
-    keyboard_type: Optional[str] = None
-    profession: Optional[str] = None
-    location: Optional[str] = None
-    about_user: Optional[str] = None
-
-
 class GetProfileData(BaseModel):
     name: str
+    profile_photo_url: Optional[HttpUrl]
     touch_typing: bool
     keyboard_type: Optional[str]
     profession: Optional[str]

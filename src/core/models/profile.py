@@ -21,6 +21,9 @@ class Profile(Base):
         index=True,
     )
 
+    profile_photo_url: Mapped[Optional[str]] = mapped_column(
+        String,
+    )
     touch_typing: Mapped[bool] = mapped_column(
         default=False,
     )

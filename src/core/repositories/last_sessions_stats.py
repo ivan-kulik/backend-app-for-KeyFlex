@@ -1,6 +1,6 @@
 from sqlalchemy import select, literal, union_all
 
-from core.db.db_helper import db_helper
+from core.utils.db_helper import db_helper
 from core.config import settings
 from core.models import StatsModelsEnum
 

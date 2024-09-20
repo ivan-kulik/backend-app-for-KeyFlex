@@ -1,6 +1,6 @@
 from sqlalchemy import select, insert
 
-from core.db.db_helper import db_helper
+from core.utils.db_helper import db_helper
 from core.models.profile import Profile
 
 
@@ -36,8 +36,6 @@ class ProfileRepo:
                 self.model.user_reference == cur_user.username,
             )
             profile_data = await session.scalar(stmt)
-            for name, value in profile_update_data.model_dump(
-                exclude_unset=True
-            ).items():
+            for name, value in profile_update_data.items():
                 setattr(profile_data, name, value)
             await session.commit()

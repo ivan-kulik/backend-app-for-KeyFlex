@@ -1,11 +1,13 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Request
 
 from api.dependencies.profile_service import get_profile_service
 from core.config import settings
 from core.models import User
-from core.schemas.profile import ProfileUpdate, GetProfileData
+from core.schemas.profile import GetProfileData
+
+from core.forms.profile import ProfileUpdateForm
 from core.services.profile import ProfileService
 from api.dependencies import current_active_verified_user
 
@@ -22,9 +24,9 @@ router = APIRouter(
 async def update_profile(
     user: Annotated[User, Depends(current_active_verified_user)],
     profile_service: Annotated[ProfileService, Depends(get_profile_service)],
-    profile_update: ProfileUpdate,
+    profile_update: Annotated[ProfileUpdateForm, Depends()],
 ):
-    return await profile_service.update_profile(
+    await profile_service.update_profile(
         cur_user=user,
         profile_update=profile_update,
     )

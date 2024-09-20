@@ -7,7 +7,7 @@ from typing import List, TYPE_CHECKING
 
 from .base import Base
 from core.types.user_id import UserIdType
-from core.db.user_database import CustomSQLAlchemyUserDatabase
+from core.utils.user_database import CustomSQLAlchemyUserDatabase
 
 if TYPE_CHECKING:
     from .oauth_account import OAuthAccount

@@ -40,6 +40,14 @@ class DatabaseConfig(BaseModel):
     }
 
 
+class S3Config(BaseModel):
+    access_key: str
+    secret_key: str
+    endpoint_url: str
+    bucket_name: str
+    bucket_url: str
+
+
 class StatsAmountConfig(BaseModel):
     modes_stats: int = 75
     last_sessions_stats: int = 10
@@ -74,6 +82,7 @@ class Settings(BaseSettings):
     run: RunConfig = RunConfig()
     api: APIPrefix = APIPrefix()
     db: DatabaseConfig
+    s3: S3Config
     amount_of_stats: StatsAmountConfig = StatsAmountConfig()
     access_token: AccessToken
     google_oauth2: GoogleOAuth2Config

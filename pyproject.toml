@@ -12,6 +12,7 @@ asyncpg = "^0.29.0"
 alembic = "^1.13.2"
 fastapi-users = {extras = ["oauth", "sqlalchemy"], version = "^13.0.0"}
 orjson = "^3.10.6"
+aiobotocore = "^2.15.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.4.2"
