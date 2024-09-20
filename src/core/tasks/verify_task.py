@@ -5,7 +5,11 @@ from pydantic import EmailStr
 from core.config import settings
 
 
-def get_email_message_template(username: str, user_email: EmailStr, token: str):
+def get_email_message_template(
+    username: str,
+    user_email: EmailStr,
+    token: str,
+) -> EmailMessage:
     email = EmailMessage()
     email["Subject"] = "Подтверждение электронной почты"
     email["From"] = settings.email_verification.SMTP_USER
@@ -26,8 +30,8 @@ def send_email_message_to_verify_email(
     username: str,
     user_email: EmailStr,
     token: str,
-):
-    email_message = get_email_message_template(
+) -> None:
+    email_message: EmailMessage = get_email_message_template(
         username=username,
         user_email=user_email,
         token=token,
