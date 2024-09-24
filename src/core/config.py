@@ -1,4 +1,4 @@
-from pydantic import BaseModel, PostgresDsn
+from pydantic import BaseModel, PostgresDsn, HttpUrl
 from pydantic_settings import (
     BaseSettings,
     SettingsConfigDict,
@@ -43,9 +43,9 @@ class DatabaseConfig(BaseModel):
 class S3Config(BaseModel):
     access_key: str
     secret_key: str
-    endpoint_url: str
+    endpoint_url: HttpUrl
     bucket_name: str
-    bucket_url: str
+    bucket_url: HttpUrl
 
 
 class StatsAmountConfig(BaseModel):
@@ -70,6 +70,12 @@ class EmailVerificationConfig(BaseModel):
     SMTP_PASSWORD: str
     SMTP_HOST: str = "smtp.gmail.com"
     SMTP_PORT: int = 465
+    msg_subject: str
+    msg_subtitle_text: str
+    msg_paragraph1_text: str
+    msg_paragraph2_text: str
+    msg_confirm_button_text: str
+    url_link: HttpUrl = "https://keyflex.netlify.app/profile?token="
 
 
 class Settings(BaseSettings):
