@@ -42,7 +42,6 @@ def get_verify_router(
 
             background_tasks.add_task(
                 send_email_message_to_verify_email,
-                user.username,
                 user.email,
                 token,
             )
