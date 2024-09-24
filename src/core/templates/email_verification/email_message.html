@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Confirmation</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f6f6f6;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border: 1px solid #e5e5e5;
+      padding: 20px;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    .logo {
+      font-size: 48px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .title {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+    .confirm-button {
+      display: inline-block;
+      padding: 15px 25px;
+      font-size: 16px;
+      color: #ffffff;
+      background-color: #000000;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="logo">
+      KF
+    </div>
+    <div class="title">Keyflex</div>
+    <div class="subtitle">{{ msg_subtitle_text }}</div>
+    <p style="font-size: 24px; font-weight: bold;">{{ msg_paragraph1_text }}</p>
+    <p style="font-size: 16px;">{{ msg_paragraph2_text }}</p>
+    <a href="{{ url_link }}" class="confirm-button">{{ msg_confirm_button_text }}</a>
+  </div>
+</body>
+</html>
